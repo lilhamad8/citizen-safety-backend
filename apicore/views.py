@@ -25,10 +25,9 @@ def login(request):
     if username is None or password is None:
         return Response({'error': 'Please provide both email and password'},
                         status=HTTP_400_BAD_REQUEST)
-    user = CustomUser.objects.get(Q(username__iexact=username) | Q(email__iexact=username))
-        # except UserModel.DoesNotExist:
-    # user = authenticate(email=email, password=password)
-    if not user:
+    try:
+        user = CustomUser.objects.get(Q(username__iexact=username) | Q(email__iexact=username))
+    except CustomUser.DoesNotExist:
         return Response({'error': 'Invalid Credentials'},
                         status=HTTP_404_NOT_FOUND)
     token, _ = Token.objects.get_or_create(user=user)
