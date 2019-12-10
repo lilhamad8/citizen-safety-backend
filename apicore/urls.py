@@ -6,4 +6,5 @@ urlpatterns = [
     # 'users' test endpoint
     path('', views.AllUsers.as_view(), name='users'), 
     path('login/', views.login, name='login'),
+    path('signup/', views.create_user, name='signup'),
 ]
