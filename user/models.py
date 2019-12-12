@@ -12,5 +12,5 @@ class CustomUser(AbstractUser):
     picture = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=200, blank=True)
 
-    def __str__(self):
-        return self.first_name+' '+self.last_name
+    # def __str__(self):
+    #     return self
