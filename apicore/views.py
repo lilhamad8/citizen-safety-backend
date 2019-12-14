@@ -36,11 +36,16 @@ def login(request):
                         status=HTTP_404_NOT_FOUND)
     token, _ = Token.objects.get_or_create(user=user)
     # user = UserSerializer(user)
-    user = serializers.serialize('json', [ user, ], fields=('first_name','last_name','phone','location'))
-    # data = {}
+
+    # user = serializers.serialize('json', [ user, ], fields=('first_name','last_name','phone','location'))
+    data = {}
+    data["first_name"]=user.first_name
+    data["last_name"]=user.last_name
+    data["phone"]=user.phone
+    data["email"]=user.email
     # data["response"]={'token': token.key,'user':user}
     # return JsonResponse({'foo': 'bar'})
-    return JsonResponse({'data':{'token': token.key,'user':user}}, status=HTTP_200_OK)
+    return JsonResponse({'data':{'token': token.key,'user':data}}, status=HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
