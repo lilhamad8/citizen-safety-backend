@@ -128,7 +128,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+# ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

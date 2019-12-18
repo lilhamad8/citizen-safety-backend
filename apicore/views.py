@@ -47,17 +47,54 @@ def login(request):
     # return JsonResponse({'foo': 'bar'})
     return JsonResponse({'data':{'token': token.key,'user':data}}, status=HTTP_200_OK)
 
+def loginNoRequest(username, password):
+    print(username)
+    print(password)
+    user = CustomUser.objects.get(Q(username__iexact=username) | Q(email__iexact=username))
+    token, _ = Token.objects.get_or_create(user=user)
+    # user = UserSerializer(user)
+
+    # user = serializers.serialize('json', [ user, ], fields=('first_name','last_name','phone','location'))
+    data = {}
+    data["first_name"]=user.first_name
+    data["last_name"]=user.last_name
+    data["phone"]=user.phone
+    data["email"]=user.email
+    # data["response"]={'token': token.key,'user':user}
+    # return JsonResponse({'foo': 'bar'})
+    return JsonResponse({'data':{'token': token.key,'user':data}}, status=HTTP_200_OK)
+
+
 @api_view(['POST'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def create_user(request):
+    import pdb
+    pdb.set_trace
+    print(request.data)
     serialized = UserSerializer(data=request.data)
+    print(serialized)
     if serialized.is_valid():
-        CustomUser.objects.create_user(
+        user = CustomUser.objects.create_user(
             serialized.save()
         )
-        print('done')
-        return Response(serialized.data, status=HTTP_201_CREATED)
+        # print('done')
+        # print(request.data.get("email"))
+        # return Response(serialized.data, status=HTTP_201_CREATED)
+        token, _ = Token.objects.get_or_create(user=user)
+        # user = UserSerializer(user)
+
+        # user = serializers.serialize('json', [ user, ], fields=('first_name','last_name','phone','location'))
+        data = {}
+        data["first_name"]=user.first_name
+        data["last_name"]=user.last_name
+        data["phone"]=user.phone
+        data["email"]=user.email
+        # data["response"]={'token': token.key,'user':user}
+        # return JsonResponse({'foo': 'bar'})
+        return JsonResponse({'data':{'token': token.key,'user':data}}, status=HTTP_200_OK)
+        # loginNoRequest(request.data.get("email"), request.data.get("password"))
     else:
+        # return loginNoRequest(request.data.get("email"), request.data.get("password"))
         return Response(serialized._errors, status=HTTP_400_BAD_REQUEST)
 
 
